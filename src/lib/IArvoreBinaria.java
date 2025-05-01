@@ -44,7 +44,7 @@ public interface IArvoreBinaria<T> {
      * @param comparador - Comparator a ser utilizado na busca. 
      * @return caso tenha sido encontrado um elemento com o valor buscado, o mesmo será retornado. Caso contrário retorna null.
      */
-    public T pesquisar(T valor, Comparator comparador);
+    public T pesquisar(T valor, Comparator<T> comparador);
  
 
     /**
@@ -52,7 +52,7 @@ public interface IArvoreBinaria<T> {
      * @param valor - será utilizado para passar o valor da chave a ser buscada. Por exemplo, se for um árvore de Alunos indexada por nome, deve-se passar um objeto do tipo aluno com o nome que se deseja buscar.
      * @return caso tenha sido encontrado um elemento com o valor buscado, o elemento será removido da árvore e seu valor (do tipo T) será retornado. Caso contrário retorna null.
      */
-    public T remover(T valor);
+    public No<T> remover(T valor);
     
     /**
      * Método que retorna a altura da árvore
