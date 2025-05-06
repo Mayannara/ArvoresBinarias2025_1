@@ -105,8 +105,59 @@ public class ArvoreBinaria<T> implements IArvoreBinaria<T> {
     }
 
     @Override
-    public No<T> remover(T valor) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public T remover(T valor) {
+        No<T> noRemovido = new No<>(null); // Auxiliar para guardar o valor removido
+        raiz = removerRecursivo(raiz, valor, noRemovido);
+        return noRemovido.getValor();
+    }
+
+    private No<T> removerRecursivo(No<T> atual, T valor, No<T> noRemovido) {
+        if (atual == null) {
+            return null;
+        }
+
+        int comparacao = comparador.compare(valor, atual.getValor());
+
+        if (comparacao < 0) {
+            atual.setFilhoEsquerda(removerRecursivo(atual.getFilhoEsquerda(), valor, noRemovido));
+        } else if (comparacao > 0) {
+            atual.setFilhoDireita(removerRecursivo(atual.getFilhoDireita(), valor, noRemovido));
+        } else {
+            // Nó encontrado - vamos removê-lo
+            noRemovido.setValor(atual.getValor());
+
+            // Caso 1: Nó é folha (sem filhos)
+            if (atual.getFilhoEsquerda() == null && atual.getFilhoDireita() == null) {
+                return null;
+            }
+
+            // Caso 2: Nó tem apenas um filho
+            if (atual.getFilhoEsquerda() == null) {
+                return atual.getFilhoDireita();
+            }
+            if (atual.getFilhoDireita() == null) {
+                return atual.getFilhoEsquerda();
+            }
+
+            // Caso 3: Nó tem dois filhos
+            // Encontrar o sucessor in-order (menor nó na subárvore direita)
+            No<T> sucessor = encontrarMinimo(atual.getFilhoDireita());
+
+            // Copiar o valor do sucessor para o nó atual
+            atual.setValor(sucessor.getValor());
+
+            // Remover o sucessor
+            atual.setFilhoDireita(removerRecursivo(atual.getFilhoDireita(), sucessor.getValor(), new No<>(null)));
+        }
+
+        return atual;
+    }
+
+    private No<T> encontrarMinimo(No<T> no) {
+        while (no.getFilhoEsquerda() != null) {
+            no = no.getFilhoEsquerda();
+        }
+        return no;
     }
 
     // Perguntar ao professor sobre a recurssividade por conta do stackoverflow!!!!!!!!!!!!!!
