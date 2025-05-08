@@ -105,10 +105,10 @@ public class ArvoreBinaria<T> implements IArvoreBinaria<T> {
     }
 
     @Override
-    public T remover(T valor) {
+    public No<T> remover(T valor) {
         No<T> noRemovido = new No<>(null); // Auxiliar para guardar o valor removido
         raiz = removerRecursivo(raiz, valor, noRemovido);
-        return noRemovido.getValor();
+        return noRemovido;
     }
 
     private No<T> removerRecursivo(No<T> atual, T valor, No<T> noRemovido) {
@@ -135,19 +135,19 @@ public class ArvoreBinaria<T> implements IArvoreBinaria<T> {
             if (atual.getFilhoEsquerda() == null) {
                 return atual.getFilhoDireita();
             }
-            if (atual.getFilhoDireita() == null) {
+            else if (atual.getFilhoDireita() == null) {
                 return atual.getFilhoEsquerda();
             }
+            else{
+                // Caso 3: nó com 2 filhos
+                //Encontra o valor minimo
+                No<T> sucessor = encontrarMinimo(atual.getFilhoDireita());
+                //Acha o valor que deve ser posto no lugar do que vai sar
+                atual.setValor(sucessor.getValor());
+                //Remove o valor
+                atual.getFilhoDireita().setValor(removerMinimo(atual.getFilhoDireita()).getValor());
+            }
 
-            // Caso 3: Nó tem dois filhos
-            // Encontrar o sucessor in-order (menor nó na subárvore direita)
-            No<T> sucessor = encontrarMinimo(atual.getFilhoDireita());
-
-            // Copiar o valor do sucessor para o nó atual
-            atual.setValor(sucessor.getValor());
-
-            // Remover o sucessor
-            atual.setFilhoDireita(removerRecursivo(atual.getFilhoDireita(), sucessor.getValor(), new No<>(null)));
         }
 
         return atual;
@@ -157,6 +157,14 @@ public class ArvoreBinaria<T> implements IArvoreBinaria<T> {
         while (no.getFilhoEsquerda() != null) {
             no = no.getFilhoEsquerda();
         }
+        return no;
+    }
+
+    private No<T> removerMinimo(No<T> no) {
+        if (no.getFilhoEsquerda() == null) {
+            return no.getFilhoDireita();
+        }
+        no.setFilhoEsquerda(removerMinimo(no.getFilhoEsquerda()));
         return no;
     }
 
