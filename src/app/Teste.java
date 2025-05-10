@@ -20,7 +20,7 @@ public class Teste {
 
         System.out.println(arvore.altura());
         System.out.println(arvore.quantidadeNos());
-        System.out.println(arvore.remover(new Aluno(150,"Marina")));
+        System.out.println(arvore.remover(new Aluno(120,"Marina")));
         System.out.println(arvore.quantidadeNos());
     }
 }
