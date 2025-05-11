@@ -8,12 +8,15 @@ package lib;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.*;
+
 
 public class ArvoreBinaria<T> implements IArvoreBinaria<T> {
     
     protected No<T> raiz = null;
-    protected Comparator<T> comparador; 
-  
+    protected Comparator<T> comparador;
+
+
     public ArvoreBinaria(Comparator<T> comp) {
         comparador = comp;
     }
@@ -168,14 +171,6 @@ public class ArvoreBinaria<T> implements IArvoreBinaria<T> {
         return no;
     }
 
-    // Perguntar ao professor sobre a recurssividade por conta do stackoverflow!!!!!!!!!!!!!!
-
-
-    // Com este metodo arvores muito grandes tendem a dar overflow, por isso  depois de buscas na internt vi que eram mais seguro fazer com o metodo de baixo
-
-    public int altura2() {
-       return alturaRecursiva(this.raiz);
-    }
 
     private int alturaRecursiva(No<T> noAtual) {
        if (noAtual == null) {
@@ -232,11 +227,45 @@ public class ArvoreBinaria<T> implements IArvoreBinaria<T> {
 
     @Override
     public String caminharEmNivel() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.    
+        ArrayList<No<T>> fila = new ArrayList<>();
+        String filafinal = "[";
+        fila.add(raiz);
+
+        while (!fila.isEmpty()) {
+            No<T> atual = fila.removeFirst();
+            filafinal = filafinal + "\n" + atual.getValor().toString();
+            if (atual.getFilhoEsquerda() != null) {fila.add(atual.getFilhoEsquerda());}
+            if (atual.getFilhoDireita() != null) {fila.add(atual.getFilhoDireita());}
+        }
+        filafinal = filafinal + " ";
+        return filafinal;
     }
-    
+
     @Override
     public String caminharEmOrdem() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.    
+        StringBuilder filafinal = new StringBuilder("[");
+
+        if (raiz !=null) {
+            caminharEmOrdem(raiz, filafinal);
+        }
+
+        return filafinal.append("]").toString();
+    }
+
+    private void caminharEmOrdem(No<T> no, StringBuilder filafinal) {
+        if (no != null) {
+            // Primeiro vai para a esquerda
+            caminharEmOrdem(no.getFilhoEsquerda(), filafinal);
+
+            // Nó atual
+            if (filafinal.length() > 1) {
+                filafinal.append(",\n");
+            }
+
+            filafinal.append(no.getValor().toString());
+
+            // Vai para a direita
+            caminharEmOrdem(no.getFilhoDireita(), filafinal);
+        }
     }
 }
